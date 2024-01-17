@@ -10,9 +10,15 @@ exports.createPages = async ({ graphql, actions }) => {
         edges {
           node {
             childMdx {
+              body
               frontmatter {
                 title
                 description
+                authors
+                tags
+                persons
+                category
+                companies
               }
               fields {
                 slug
@@ -26,15 +32,16 @@ exports.createPages = async ({ graphql, actions }) => {
 
   result.data.allArticles.edges.forEach(({ node }) => {
     createPage({
-      path: node.childMdx.fields.slug, // access slug correctly
+      path: `/blog/${node.childMdx.fields.slug}`, 
       component: path.resolve(`./src/templates/article.js`),
       context: {
-        // данные, которые вы хотите передать в шаблон
         article: node.childMdx, // pass childMdx as article
       },
     })
+
   })
 }
+
 
 exports.onCreateNode = ({ node, getNode, actions }) => {
   const { createNodeField } = actions

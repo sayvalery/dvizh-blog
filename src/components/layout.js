@@ -1,35 +1,23 @@
 import * as React from "react"
 import { Link } from "gatsby"
+import { Container, Navbar, Nav } from 'react-bootstrap'
 
-const Layout = ({ location, title, children }) => {
-  const rootPath = `${__PATH_PREFIX__}/`
-  const isRootPath = location.pathname === rootPath
-  let header
-
-  if (isRootPath) {
-    header = (
-      <h1 className="main-heading">
-        <Link to="/">{title}</Link>
-      </h1>
-    )
-  } else {
-    header = (
-      <Link className="header-link-home" to="/">
-        {title}
-      </Link>
-    )
-  }
-
+const Layout = ({ children }) => {
   return (
-    <div className="global-wrapper" data-is-root-path={isRootPath}>
-      <header className="global-header">{header}</header>
+    <Container>
+      <Navbar bg="light" expand="lg">
+        <Navbar.Brand as={Link} to="/">My Site</Navbar.Brand>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="mr-auto">
+            <Nav.Link as={Link} to="/page-2">Page 2</Nav.Link>
+            <Nav.Link as={Link} to="/page-3">Page 3</Nav.Link>
+            {/* Add more Nav.Links as needed */}
+          </Nav>
+        </Navbar.Collapse>
+      </Navbar>
       <main>{children}</main>
-      <footer>
-        © {new Date().getFullYear()}, Built with
-        {` `}
-        <a href="https://www.gatsbyjs.com">Gatsby</a>
-      </footer>
-    </div>
+    </Container>
   )
 }
 

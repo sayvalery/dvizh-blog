@@ -1,11 +1,12 @@
 import React from "react"
-import { Container, Row, Col, Card } from "react-bootstrap"
-import { useStaticQuery, graphql, Link } from "gatsby"
+import { Container, Card, Row, Col, Badge, Stack } from "react-bootstrap"
+import { graphql, useStaticQuery } from "gatsby"
+import Layout from "../components/Layout.js"
 
 const BlogPage = () => {
   const data = useStaticQuery(graphql`
     query {
-      allArticles: allFile(filter: { sourceInstanceName: { eq: "articles" } }) {
+      allArticles: allFile(filter: { sourceInstanceName: { eq: "articles" }, extension: { eq: "mdx" } }) {
         edges {
           node {
             childMdx {
@@ -13,6 +14,9 @@ const BlogPage = () => {
                 title
                 description
                 authors
+                tags
+              }
+              fields {
                 slug
               }
             }
@@ -39,42 +43,40 @@ const BlogPage = () => {
   const persons = data.allPersons.edges.map(edge => edge.node.childMdx)
 
   return (
-    <Container>
-      {articles.map((article, index) => (
-        <Card key={index} lg={6}>
-          <Card.Body>
-            <Card.Title>{article.frontmatter.title}</Card.Title>
-            <Card.Text>{article.frontmatter.description}</Card.Text>
-            <Card.Text>{article.frontmatter.authors}</Card.Text>
-            
-            <Link to={article.frontmatter.slug}>Читать далее</Link>
-          </Card.Body>
-        </Card>
-      ))}
-    </Container>
+    <Layout>
+      <Container>
+        <Row>
+          {articles.map((article, index) => (
+            <Col lg={4} key={index}>
+              <Card className="h-100">
+                <a href={article.fields.slug}>
+                  <Card.Img
+                    variant="top"
+                    src={`https://source.unsplash.com/random/400x200?real-estate/${index}`}
+                  />
+                  <Card.Body>
+                    <Card.Title>{article.frontmatter.title}</Card.Title>
+                    <Card.Text>{article.frontmatter.description}</Card.Text>
+                    <Card.Text>{article.frontmatter.authors}</Card.Text>
+                    <Stack direction="horizontal" gap={2}>
+                      {article.frontmatter.tags &&
+                        article.frontmatter.tags.map((tag, index) => (
+                          <Badge key={index} bg="secondary">
+                            <a href="#" className="text-white">
+                              {tag}
+                            </a>
+                          </Badge>
+                        ))}
+                    </Stack>
+                  </Card.Body>
+                </a>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      </Container>
+    </Layout>
   )
-
-  //   return (
-  //     <div>
-  //       {articles.map((articleы, index) => (
-  //         <ArticleTemplate key={index} article={articles} />
-  //       ))}
-  //     </div>
-  //   )
-
-  //   const persons = data.allPersons.edges.map(edge => ({
-  //     name: edge.node.childMdx.frontmatter.name,
-  //     slug: edge.node.childMdx.fields.slug,
-  //   }))
-
-//   const articlesWithAuthors = articles.map(article => {
-//     const authors = article.authors.map(authorSlug => {
-//       const author = persons.find(person => person.slug === authorSlug)
-//       return author ? author.name : "Unknown"
-//     })
-//     return { ...article, author: authors.join(", ") }
-//   })
-
 }
 
 export default BlogPage

@@ -1,24 +1,29 @@
-import * as React from "react"
-import { Link } from "gatsby"
-import { Container, Navbar, Nav } from 'react-bootstrap'
+import React from 'react';
+import { Container, Navbar, Nav } from 'react-bootstrap';
 
 const Layout = ({ children }) => {
   return (
-    <Container>
+    <>
       <Navbar bg="light" expand="lg">
-        <Navbar.Brand as={Link} to="/">My Site</Navbar.Brand>
+        <Navbar.Brand href="#home">Движ</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mr-auto">
-            <Nav.Link as={Link} to="/page-2">Page 2</Nav.Link>
-            <Nav.Link as={Link} to="/page-3">Page 3</Nav.Link>
-            {/* Add more Nav.Links as needed */}
+            <Nav.Link href="/">Главная</Nav.Link>
+            <Nav.Link href="/blog">Блог</Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Navbar>
-      <main>{children}</main>
-    </Container>
-  )
-}
 
-export default Layout
+      <Container>
+        {children}
+      </Container>
+
+      <div className="footer text-center">
+        © 2022 Your Website
+      </div>
+    </>
+  );
+};
+
+export default Layout;

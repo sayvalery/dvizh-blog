@@ -6,7 +6,12 @@ exports.createPages = async ({ graphql, actions }) => {
 
   const result = await graphql(`
     query {
-      allArticles: allFile(filter: { sourceInstanceName: { eq: "articles" } }) {
+      allArticles: allFile(
+        filter: {
+          sourceInstanceName: { eq: "articles" }
+          extension: { eq: "mdx" }
+        }
+      ) {
         edges {
           node {
             childMdx {
@@ -32,16 +37,14 @@ exports.createPages = async ({ graphql, actions }) => {
 
   result.data.allArticles.edges.forEach(({ node }) => {
     createPage({
-      path: `/blog/${node.childMdx.fields.slug}`, 
+      path: `/blog/${node.childMdx.fields.slug}`,
       component: path.resolve(`./src/templates/article.js`),
       context: {
         article: node.childMdx, // pass childMdx as article
       },
     })
-
   })
 }
-
 
 exports.onCreateNode = ({ node, getNode, actions }) => {
   const { createNodeField } = actions
